@@ -11,31 +11,13 @@
 
 @implementation SchoolearnDialog
 
--(instancetype)initWithFrame:(CGRect)frame /*dic:(NSDictionary *)dic leftStr:(NSString *)leftStr centerStr:(NSString *)centerStr rightStr:(NSString *)rightStr topbgColor:(NSArray *)topbgColor bottombgColor:(NSArray *)bottombgColor leftbtnbgColor:(NSArray *)leftbtnbgColor rightbtnbgColor:(NSArray *)rightbtnbgColor centerbtnColor:(NSArray *)centerbtnColor selectValueArry:(NSArray *)selectValueArry  weightArry:(NSArray *)weightArry
-pickerToolBarFontSize:(NSString *)pickerToolBarFontSize  pickerFontSize:(NSString *)pickerFontSize  pickerFontColor:(NSArray *)pickerFontColor*/
+-(instancetype)initWithFrame:(CGRect)frame
 
 {
     self = [super initWithFrame:frame];
     if (self)
     {
-        /*self.backArry=[[NSMutableArray alloc]init];
-        self.provinceArray=[[NSMutableArray alloc]init];
-        self.cityArray=[[NSMutableArray alloc]init];
-        self.selectValueArry=selectValueArry;
-        self.weightArry=weightArry;
-        self.pickerDic=dic;
-        self.leftStr=leftStr;
-        self.rightStr=rightStr;
-        self.centStr=centerStr;
-        self.pickerToolBarFontSize=pickerToolBarFontSize;
-        self.pickerFontSize=pickerFontSize;
-        self.pickerFontColor=pickerFontColor;
-        [self getStyle];
-        [self getnumStyle];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self makeuiWith:topbgColor With:bottombgColor With:leftbtnbgColor With:rightbtnbgColor With:centerbtnColor];
-            [self selectRow];
-        });*/
+        
     }
     return self;
 }
@@ -47,23 +29,16 @@ pickerToolBarFontSize:(NSString *)pickerToolBarFontSize  pickerFontSize:(NSStrin
     
     if (self.backString != nil && self.backString != NULL) {
         
-        //[dic setValue:self.backArry forKey:@"selectedValue"];
         [dic setValue:@"confirm" forKey:@"type"];
         NSMutableArray *arry=[[NSMutableArray alloc]init];
-        //[dic setValue:[self getselectIndexArry] forKey:@"selectedIndex"];
-        //[dic setValue:arry forKey:@"selectedIndex"];
-        //[dic setValue:self.backArry forKey:@"voiceResult"];
         [dic setValue:self.backString forKey:@"voiceResult"];
         
         self.bolock(dic);
         
     }else{
         [self getNOselectinfo];
-        //[dic setValue:self.backArry forKey:@"voiceResult"];
         [dic setValue:self.backString forKey:@"voiceResult"];
         [dic setValue:@"confirm" forKey:@"type"];
-        
-        //[dic setValue:[self getselectIndexArry] forKey:@"selectedIndex"];
         
         self.bolock(dic);
     }
@@ -79,8 +54,6 @@ pickerToolBarFontSize:(NSString *)pickerToolBarFontSize  pickerFontSize:(NSStrin
 
 -(void)getNOselectinfo
 {
-    //[self.backArry addObject:[self.noCorreArry objectAtIndex:0]];
-    
     self.backString = @"";
 }
 
