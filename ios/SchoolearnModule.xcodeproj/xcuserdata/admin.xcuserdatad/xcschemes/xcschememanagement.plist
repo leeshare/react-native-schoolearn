@@ -7,6 +7,11 @@
 		<key>SchoolearnModule.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>36</integer>
+		</dict>
+		<key>WaveformViewModule.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>30</integer>
 		</dict>
 	</dict>
