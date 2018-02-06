@@ -17,7 +17,6 @@
 		8405E9171EFE5F1D008C4FE5 /* SchoolearnModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchoolearnModule.m; sourceTree = "<group>"; };
 		845972F71F01C85800628E1E /* SchoolearnDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SchoolearnDialog.h; sourceTree = "<group>"; };
 		845972F81F01C88600628E1E /* SchoolearnDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchoolearnDialog.m; sourceTree = "<group>"; };
-		848037AB202847E2000663FE /* Definition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definition.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +57,6 @@
 		E839CE2A1B3EF54100115CBE /* SchoolearnModule */ = {
 			isa = PBXGroup;
 			children = (
-				848037AB202847E2000663FE /* Definition.h */,
 				8405E9161EFE5F1D008C4FE5 /* SchoolearnModule.h */,
 				8405E9171EFE5F1D008C4FE5 /* SchoolearnModule.m */,
 				845972F71F01C85800628E1E /* SchoolearnDialog.h */,

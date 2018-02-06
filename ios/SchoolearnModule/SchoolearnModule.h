@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridge.h>
+#import <React/RCTBridgeModule.h>
 #import <UIKit/UIKit.h>
 
 @interface SchoolearnModule : NSObject <RCTBridgeModule>
