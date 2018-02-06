@@ -5,7 +5,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -13,6 +15,8 @@ import android.hardware.Camera;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -138,6 +142,30 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         WritableMap result = new WritableNativeMap();
         result.putBoolean("is_success", canUse);
         callback.invoke(result);
+    }
+
+    @ReactMethod
+    public void openSettings(){
+        activity = getCurrentActivity();
+        if(activity != null) {
+            mContext = activity.getApplicationContext();
+            Intent intent = new Intent();
+
+            try {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if(Build.VERSION.SDK_INT>=9){
+                    intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                    intent.setData(Uri.fromParts("package", mContext.getPackageName(),null));
+                }else if(Build.VERSION.SDK_INT<=8){
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setClassName("com.android.settings","com.android.setting.InstalledAppDetails");
+                    intent.putExtra("com.android.settings.ApplicationPkgName", mContext.getPackageName());
+                }
+                mContext.startActivity(intent);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
 
