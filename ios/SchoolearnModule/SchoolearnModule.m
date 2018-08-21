@@ -112,4 +112,15 @@ RCT_EXPORT_METHOD(openSettings:(RCTPromiseResolveBlock)resolve rejecter:(RCTProm
     }
 }
 
+RCT_EXPORT_METHOD(getUuid: (RCTResponseSenderBlock)callback){
+    NSString *deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSLog(@"%@",deviceUUID);
+    
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
+    [output setValue:deviceUUID forKey:@"uuid"];
+    [output setValue:@"ios" forKey:@"system"];
+    
+    callback(@[output]);
+}
+
 @end
