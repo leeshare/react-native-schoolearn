@@ -167,6 +167,21 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
             }
         }
     }
+    
+    @ReactMethod
+    public void getUuid(Callback callback){
+        String id = "";
+        activity = getCurrentActivity();
+        if(activity != null){
+            mContext = activity.getApplicationContext();
 
+            String androidID = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+            id = androidID + Build.SERIAL;
+        }
+        WritableMap result = new WritableNativeMap();
+        result.putString("system", "android");
+        result.putString("uuid", id);
+        callback.invoke(result);
+    }
 
 }
