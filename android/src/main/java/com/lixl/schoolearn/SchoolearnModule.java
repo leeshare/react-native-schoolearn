@@ -143,6 +143,33 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         result.putBoolean("is_success", canUse);
         callback.invoke(result);
     }
+    
+    @ReactMethod
+    public void checkPermissionReadPhoneState(Callback callback){
+        boolean canUse = true;
+        activity = getCurrentActivity();
+        if(activity != null) {
+            mContext = activity.getApplicationContext();
+            try {
+                int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    // We don't have permission so prompt the user
+                    ActivityCompat.requestPermissions(
+                            activity,
+                            PERMISSIONS_READ_STATE,
+                            REQUEST_READ_STATE
+                    );
+                }
+            }catch(Exception e) {
+                canUse = false;
+            }
+
+        }
+
+        WritableMap result = new WritableNativeMap();
+        result.putBoolean("is_success", canUse);
+        callback.invoke(result);
+    }
 
     @ReactMethod
     public void openSettings(){
