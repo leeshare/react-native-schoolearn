@@ -10,6 +10,7 @@
 #import <React/RCTEventDispatcher.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
+#import <CoreLocation/CLLocationManager.h>  //定位库
 
 #import <objc/runtime.h>
 
@@ -93,6 +94,32 @@ RCT_EXPORT_METHOD(checkPermissionMic: (RCTResponseSenderBlock)callback){
     }
     callback(@[output]);
 }
+
+//判断手机是否开启定位权限
+RCT_EXPORT_METHOD(checkPermissionGeolocation: (RCTResponseSenderBlock)callback){
+    AVAuthorizationStatus authStatus =  [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
+    /*
+     [CLLocationManager authorizationStatus]
+     授权状态为枚举值：
+    kCLAuthorizationStatusNotDetermined                  //用户尚未对该应用程序作出选择
+    kCLAuthorizationStatusRestricted                     //应用程序的定位权限被限制
+    kCLAuthorizationStatusAuthorizedAlways               //一直允许获取定位
+    kCLAuthorizationStatusAuthorizedWhenInUse            //在使用时允许获取定位
+    kCLAuthorizationStatusAuthorized                     //已废弃，相当于一直允许获取定位
+    kCLAuthorizationStatusDenied                         //拒绝获取定位
+    */
+    if ([CLLocationManager locationServicesEnabled] && ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)) {
+        //定位功能可用
+        [output setValue:@(TRUE) forKey:@"is_success"];
+    }else if ([CLLocationManager authorizationStatus] ==kCLAuthorizationStatusDenied) {
+        //定位不能用
+        [output setValue:@(FALSE) forKey:@"is_success"];
+    }
+    callback(@[output]);
+}
+
 
 RCT_EXPORT_METHOD(openSettings:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
