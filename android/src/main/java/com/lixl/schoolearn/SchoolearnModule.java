@@ -170,6 +170,36 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         result.putBoolean("is_success", canUse);
         callback.invoke(result);
     }
+    
+    /**
+     * 检测是否开启定位权限
+     * 2018-10-23
+     * @param callback
+     */
+    @ReactMethod
+    public void checkPermissionGeolocation(Callback callback){
+        boolean canUse = true;
+        LocationManager lm;
+        activity = getCurrentActivity();
+        if(activity != null) {
+           lm = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
+           boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+           if(ok){
+               if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                       != PackageManager.PERMISSION_GRANTED) {
+                   canUse = false;
+               }else {
+                   canUse = true;
+               }
+           }else {
+               canUse = false;
+           }
+        }
+
+        WritableMap result = new WritableNativeMap();
+        result.putBoolean("is_success", canUse);
+        callback.invoke(result);
+    }
 
     @ReactMethod
     public void openSettings(){
