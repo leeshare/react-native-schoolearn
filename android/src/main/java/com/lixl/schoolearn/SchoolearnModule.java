@@ -12,11 +12,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.location.LocationManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -143,7 +145,16 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         result.putBoolean("is_success", canUse);
         callback.invoke(result);
     }
-    
+
+    private static final int REQUEST_READ_STATE = 1;
+    private static String[] PERMISSIONS_READ_STATE = {
+            Manifest.permission.READ_PHONE_STATE,
+    };
+    private static final int REQUEST_WRITE= 1;
+    private static String[] PERMISSIONS_WRITE= {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     @ReactMethod
     public void checkPermissionReadPhoneState(Callback callback){
         boolean canUse = true;
@@ -170,7 +181,7 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         result.putBoolean("is_success", canUse);
         callback.invoke(result);
     }
-    
+
     /**
      * 检测是否开启定位权限
      * 2018-10-23
@@ -182,18 +193,48 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         LocationManager lm;
         activity = getCurrentActivity();
         if(activity != null) {
-           lm = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
-           boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-           if(ok){
-               if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                       != PackageManager.PERMISSION_GRANTED) {
-                   canUse = false;
-               }else {
-                   canUse = true;
-               }
-           }else {
-               canUse = false;
-           }
+            lm = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
+            boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if(ok){
+                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    canUse = false;
+                }else {
+                    canUse = true;
+                }
+            }else {
+                canUse = false;
+            }
+        }
+
+        WritableMap result = new WritableNativeMap();
+        result.putBoolean("is_success", canUse);
+        callback.invoke(result);
+    }
+
+    /**
+     * 检测是否开启存储读写权限
+     * 2018-11-5
+     * @param callback
+     */
+    @ReactMethod
+    public void checkPermissionWriteExternalStorage(Callback callback){
+        boolean canUse = true;
+        activity = getCurrentActivity();
+        if(activity != null) {
+            try {
+                int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if(permission != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(
+                            activity,
+                            PERMISSIONS_WRITE,
+                            REQUEST_WRITE
+                    );
+                }
+
+            } catch(Exception e){
+                canUse = false;
+            }
         }
 
         WritableMap result = new WritableNativeMap();
@@ -224,7 +265,7 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
             }
         }
     }
-    
+
     @ReactMethod
     public void getUuid(Callback callback){
         String id = "";
@@ -240,5 +281,6 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         result.putString("uuid", id);
         callback.invoke(result);
     }
+
 
 }
