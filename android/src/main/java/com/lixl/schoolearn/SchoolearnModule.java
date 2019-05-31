@@ -31,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -44,6 +45,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.PermissionListener;
 
 import java.util.ArrayList;
 
@@ -165,21 +167,43 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
                 int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
                     // We don't have permission so prompt the user
+                    ((ReactActivity)activity).requestPermissions(PERMISSIONS_READ_STATE, REQUEST_READ_STATE, new PermissionListener() {
+                        @Override
+                        public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                            if(grantResults.length>0 && grantResults[0]==0){
+                                WritableMap result = new WritableNativeMap();
+                                result.putBoolean("is_success", true);
+                                callback.invoke(result);
+                                return true;
+                            }
+                            else{
+                                WritableMap result = new WritableNativeMap();
+                                result.putBoolean("is_success", false);
+                                callback.invoke(result);
+                                return false;
+                            }
+                        }
+                    });
+                    /*
                     ActivityCompat.requestPermissions(
                             activity,
                             PERMISSIONS_READ_STATE,
                             REQUEST_READ_STATE
                     );
+                    */
+                }
+                else{
+                    WritableMap result = new WritableNativeMap();
+                    result.putBoolean("is_success", true);
+                    callback.invoke(result);
                 }
             }catch(Exception e) {
-                canUse = false;
+                WritableMap result = new WritableNativeMap();
+                result.putBoolean("is_success", false);
+                callback.invoke(result);
             }
 
         }
-
-        WritableMap result = new WritableNativeMap();
-        result.putBoolean("is_success", canUse);
-        callback.invoke(result);
     }
 
     /**
