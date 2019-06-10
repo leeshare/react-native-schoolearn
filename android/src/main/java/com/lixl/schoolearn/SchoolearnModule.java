@@ -158,8 +158,8 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
     };
 
     @ReactMethod
-    public void checkPermissionReadPhoneState(Callback callback){
-        boolean canUse = true;
+    public void checkPermissionReadPhoneState(final Callback callback){
+        boolean canUse = false;
         activity = getCurrentActivity();
         if(activity != null) {
             mContext = activity.getApplicationContext();
@@ -242,28 +242,52 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
      * @param callback
      */
     @ReactMethod
-    public void checkPermissionWriteExternalStorage(Callback callback){
-        boolean canUse = true;
+    public void checkPermissionWriteExternalStorage(final Callback callback){
+        boolean canUse = false;
         activity = getCurrentActivity();
         if(activity != null) {
+            mContext = activity.getApplicationContext();
             try {
                 int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if(permission != PackageManager.PERMISSION_GRANTED){
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    // We don't have permission so prompt the user
+                    ((ReactActivity)activity).requestPermissions(PERMISSIONS_WRITE, REQUEST_WRITE, new PermissionListener() {
+                        @Override
+                        public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                            if(grantResults.length>0 && grantResults[0]==0){
+                                WritableMap result = new WritableNativeMap();
+                                result.putBoolean("is_success", true);
+                                callback.invoke(result);
+                                return true;
+                            }
+                            else{
+                                WritableMap result = new WritableNativeMap();
+                                result.putBoolean("is_success", false);
+                                callback.invoke(result);
+                                return false;
+                            }
+                        }
+                    });
+                    /*
                     ActivityCompat.requestPermissions(
                             activity,
-                            PERMISSIONS_WRITE,
-                            REQUEST_WRITE
+                            PERMISSIONS_READ_STATE,
+                            REQUEST_READ_STATE
                     );
+                    */
                 }
-
-            } catch(Exception e){
-                canUse = false;
+                else{
+                    WritableMap result = new WritableNativeMap();
+                    result.putBoolean("is_success", true);
+                    callback.invoke(result);
+                }
+            }catch(Exception e) {
+                WritableMap result = new WritableNativeMap();
+                result.putBoolean("is_success", false);
+                callback.invoke(result);
             }
-        }
 
-        WritableMap result = new WritableNativeMap();
-        result.putBoolean("is_success", canUse);
-        callback.invoke(result);
+        }
     }
 
     @ReactMethod
