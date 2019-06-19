@@ -135,8 +135,12 @@ public class SchoolearnModule extends ReactContextBaseJavaModule{
         Camera mCamera = null;
         try{
             mCamera = Camera.open();
-            Camera.Parameters mParameters = mCamera.getParameters();
-            mCamera.setParameters(mParameters);
+            //Camera.Parameters mParameters = mCamera.getParameters();
+            //mCamera.setParameters(mParameters);
+            //摄像头权限判断代码，发现上面两行代码，有授权的情况下，会出现摄像头检测有时候成功、有时候catch异常，屏蔽后正常。
+            //经调试，如果没有摄像头授权权限，调用open()方法就会进入catch，
+            //所以注释掉
+            
         }catch(Exception e) {
             canUse = false;
         }
