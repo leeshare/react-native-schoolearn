@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import <CoreLocation/CLLocationManager.h>  //定位库
+#import <Photos/PHPhotoLibrary.h>
 
 #import <objc/runtime.h>
 
@@ -71,6 +72,20 @@ RCT_EXPORT_METHOD(checkPermissionCamera: (RCTResponseSenderBlock)callback){
     NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
     
     if (authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied)
+    {
+        //无权限
+        [output setValue:@(FALSE) forKey:@"is_success"];
+    }else {
+        [output setValue:@(TRUE) forKey:@"is_success"];
+    }
+    callback(@[output]);
+}
+
+RCT_EXPORT_METHOD(checkPermissionAlbum: (RCTResponseSenderBlock)callback){
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
+    
+    if (status == PHAuthorizationStatusRestricted || status == PHAuthorizationStatusDenied)
     {
         //无权限
         [output setValue:@(FALSE) forKey:@"is_success"];
